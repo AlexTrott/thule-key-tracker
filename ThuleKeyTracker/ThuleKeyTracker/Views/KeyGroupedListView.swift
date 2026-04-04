@@ -13,7 +13,7 @@ struct KeyGroupedListView: View {
                 ForEach(group.products) { product in
                     NavigationLink(value: product.id) {
                         HStack(spacing: 12) {
-                            ProductTypeIcon(productType: product.productType, size: 16)
+                            ProductTypeIcon(productType: product.productType, size: 14)
                             Text(product.displayName)
                                 .font(.body.weight(.medium))
                         }

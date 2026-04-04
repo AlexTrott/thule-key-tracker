@@ -9,22 +9,26 @@ struct ProductDetailView: View {
         List {
             Section {
                 VStack(spacing: 12) {
-                    ProductTypeIcon(productType: product.productType, size: 28)
+                    ProductTypeIcon(productType: product.productType, size: 24)
+                        .padding(.bottom, 4)
 
                     KeyCodeBadge(code: product.keyCode, style: .hero)
 
                     Text(product.displayName)
-                        .font(.title3.weight(.medium))
+                        .font(.title3)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
-                .listRowBackground(Color.clear)
+                .padding(.vertical, 24)
             }
 
             Section {
-                Label(product.productType.displayName, systemImage: product.productType.sfSymbol)
-                    .foregroundStyle(.thuleBlue)
+                Label {
+                    Text(product.productType.displayName)
+                } icon: {
+                    Image(systemName: product.productType.sfSymbol)
+                        .foregroundStyle(.thuleBlue)
+                }
                 if let custom = product.customProductName, product.productType == .other {
                     LabeledContent(String(localized: "Custom Name"), value: custom)
                 }
@@ -59,11 +63,11 @@ struct ProductDetailView: View {
                 showingEditForm = true
             }
             .fontWeight(.semibold)
-            .foregroundStyle(.thuleBlue)
         }
         .sheet(isPresented: $showingEditForm) {
             ProductFormView(editing: product)
         }
+        .tint(.thuleBlue)
     }
 }
 

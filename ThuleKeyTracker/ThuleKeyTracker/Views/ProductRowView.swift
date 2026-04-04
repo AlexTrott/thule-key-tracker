@@ -22,7 +22,7 @@ struct ProductRowView: View {
 
             KeyCodeBadge(code: product.keyCode, style: .row)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
     }
 }
 

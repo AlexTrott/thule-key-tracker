@@ -6,10 +6,10 @@ struct ProductTypeIcon: View {
 
     var body: some View {
         Image(systemName: productType.sfSymbol)
-            .font(.system(size: size, weight: .medium))
+            .font(.system(size: size, weight: .semibold))
             .foregroundStyle(.white)
-            .frame(width: size + 16, height: size + 16)
-            .background(.thuleBlue, in: RoundedRectangle(cornerRadius: (size + 16) * 0.28))
+            .frame(width: size * 2, height: size * 2)
+            .background(.thuleBlue, in: Circle())
     }
 }
 

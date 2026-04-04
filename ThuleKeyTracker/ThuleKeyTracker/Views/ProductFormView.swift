@@ -43,11 +43,13 @@ struct ProductFormView: View {
     private var keyCodeSection: some View {
         Section {
             VStack(spacing: 16) {
-                Text(viewModel.formattedKeyCode)
-                    .font(.system(size: 52, weight: .bold, design: .monospaced))
-                    .foregroundStyle(viewModel.canSave ? .thuleBlue : .secondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
+                KeyCodeBadge(
+                    code: viewModel.formattedKeyCode,
+                    style: .formPreview
+                )
+                .opacity(viewModel.canSave ? 1 : 0.35)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
 
                 TextField(String(localized: "Key code (e.g. 125 or N125)"), text: $viewModel.keyCodeInput)
                     .keyboardType(.numberPad)
