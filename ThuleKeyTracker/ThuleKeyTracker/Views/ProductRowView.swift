@@ -5,22 +5,22 @@ struct ProductRowView: View {
     let product: ThuleProduct
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 14) {
             ProductTypeIcon(productType: product.productType)
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(product.displayName)
-                    .font(.headline)
+                    .font(.body.weight(.semibold))
                 if product.nickname != nil {
                     Text(product.productType.displayName)
-                        .font(.subheadline)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
 
             Spacer()
 
-            KeyCodeBadge(code: product.keyCode)
+            KeyCodeBadge(code: product.keyCode, style: .row)
         }
         .padding(.vertical, 4)
     }

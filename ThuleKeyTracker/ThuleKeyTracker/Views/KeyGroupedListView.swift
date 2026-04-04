@@ -13,8 +13,9 @@ struct KeyGroupedListView: View {
                 ForEach(group.products) { product in
                     NavigationLink(value: product.id) {
                         HStack(spacing: 12) {
-                            ProductTypeIcon(productType: product.productType, size: 22)
+                            ProductTypeIcon(productType: product.productType, size: 16)
                             Text(product.displayName)
+                                .font(.body.weight(.medium))
                         }
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
@@ -40,8 +41,8 @@ struct KeyGroupedListView: View {
                     }
                 }
             } header: {
-                Text(group.keyCode)
-                    .font(.headline.monospaced())
+                KeyCodeBadge(code: group.keyCode, style: .groupHeader)
+                    .padding(.vertical, 2)
             }
         }
     }

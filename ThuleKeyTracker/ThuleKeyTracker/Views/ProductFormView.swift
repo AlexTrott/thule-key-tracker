@@ -32,23 +32,26 @@ struct ProductFormView: View {
                         viewModel.save(in: modelContext)
                         dismiss()
                     }
+                    .fontWeight(.semibold)
                     .disabled(!viewModel.canSave)
                 }
             }
+            .tint(.thuleBlue)
         }
     }
 
     private var keyCodeSection: some View {
         Section {
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
                 Text(viewModel.formattedKeyCode)
-                    .font(.system(size: 48, weight: .bold, design: .monospaced))
-                    .foregroundStyle(viewModel.canSave ? .primary : .secondary)
+                    .font(.system(size: 52, weight: .bold, design: .monospaced))
+                    .foregroundStyle(viewModel.canSave ? .thuleBlue : .secondary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 12)
 
                 TextField(String(localized: "Key code (e.g. 125 or N125)"), text: $viewModel.keyCodeInput)
                     .keyboardType(.numberPad)
+                    .font(.body.monospaced())
                     .textFieldStyle(.roundedBorder)
 
                 if viewModel.showRangeWarning {

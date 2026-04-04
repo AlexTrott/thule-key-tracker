@@ -2,13 +2,14 @@ import SwiftUI
 
 struct ProductTypeIcon: View {
     let productType: ProductType
-    var size: CGFloat = 28
+    var size: CGFloat = 20
 
     var body: some View {
         Image(systemName: productType.sfSymbol)
-            .font(.system(size: size))
-            .foregroundStyle(.accent)
-            .frame(width: size + 8, height: size + 8)
+            .font(.system(size: size, weight: .medium))
+            .foregroundStyle(.white)
+            .frame(width: size + 16, height: size + 16)
+            .background(.thuleBlue, in: RoundedRectangle(cornerRadius: (size + 16) * 0.28))
     }
 }
 
@@ -21,4 +22,5 @@ struct ProductTypeIcon: View {
             }
         }
     }
+    .padding()
 }

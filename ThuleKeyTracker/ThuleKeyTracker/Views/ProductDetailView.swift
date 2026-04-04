@@ -8,19 +8,23 @@ struct ProductDetailView: View {
     var body: some View {
         List {
             Section {
-                VStack(spacing: 8) {
-                    Text(product.keyCode)
-                        .font(.system(size: 56, weight: .bold, design: .monospaced))
+                VStack(spacing: 12) {
+                    ProductTypeIcon(productType: product.productType, size: 28)
+
+                    KeyCodeBadge(code: product.keyCode, style: .hero)
+
                     Text(product.displayName)
-                        .font(.title3)
+                        .font(.title3.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                .padding(.vertical, 20)
+                .listRowBackground(Color.clear)
             }
 
             Section {
                 Label(product.productType.displayName, systemImage: product.productType.sfSymbol)
+                    .foregroundStyle(.thuleBlue)
                 if let custom = product.customProductName, product.productType == .other {
                     LabeledContent(String(localized: "Custom Name"), value: custom)
                 }
@@ -35,6 +39,7 @@ struct ProductDetailView: View {
             if let notes = product.notes, !notes.isEmpty {
                 Section {
                     Text(notes)
+                        .foregroundStyle(.secondary)
                 } header: {
                     Text("Notes")
                 }
@@ -53,6 +58,8 @@ struct ProductDetailView: View {
             Button(String(localized: "Edit")) {
                 showingEditForm = true
             }
+            .fontWeight(.semibold)
+            .foregroundStyle(.thuleBlue)
         }
         .sheet(isPresented: $showingEditForm) {
             ProductFormView(editing: product)

@@ -49,6 +49,7 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(String(localized: "Settings"))
+        .tint(.thuleBlue)
         .confirmationDialog(
             String(localized: "Delete All Data?"),
             isPresented: $showingResetConfirmation,

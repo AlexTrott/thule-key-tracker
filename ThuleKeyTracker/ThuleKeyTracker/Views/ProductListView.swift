@@ -41,6 +41,7 @@ struct ProductListView: View {
                     ProductDetailView(product: product)
                 }
             }
+            .tint(.thuleBlue)
         }
     }
 
