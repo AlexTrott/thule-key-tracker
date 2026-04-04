@@ -15,22 +15,26 @@ struct KeyCodeBadge: View {
         switch style {
         case .row:
             Text(code)
-                .font(.system(size: 24, weight: .bold, design: .monospaced))
+                .font(.system(size: 28, weight: .bold, design: .monospaced))
+                .tracking(-1)
                 .foregroundStyle(.primary)
+
         case .hero:
             Text(code)
                 .font(.system(size: 56, weight: .bold, design: .monospaced))
-                .tracking(-1)
+                .tracking(-2)
                 .foregroundStyle(.primary)
+
         case .groupHeader:
             Text(code)
                 .font(.system(size: 20, weight: .bold, design: .monospaced))
                 .foregroundStyle(.thuleBlue)
+
         case .formPreview:
             Text(code)
-                .font(.system(size: 52, weight: .bold, design: .monospaced))
-                .tracking(-1)
-                .foregroundStyle(.thuleBlue)
+                .font(.system(size: 56, weight: .bold, design: .monospaced))
+                .tracking(-2)
+                .foregroundStyle(.primary)
         }
     }
 }
@@ -40,7 +44,6 @@ struct KeyCodeBadge: View {
         KeyCodeBadge(code: "N125", style: .row)
         KeyCodeBadge(code: "N125", style: .hero)
         KeyCodeBadge(code: "N042", style: .groupHeader)
-        KeyCodeBadge(code: "N200", style: .formPreview)
     }
     .padding()
 }

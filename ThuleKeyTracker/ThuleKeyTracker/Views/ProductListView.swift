@@ -15,6 +15,7 @@ struct ProductListView: View {
                     listContent
                 }
             }
+            .background(ThuleTheme.background)
             .navigationTitle(String(localized: "Thule Keys"))
             .searchable(text: $viewModel.searchText, prompt: String(localized: "Search by key code, name, or type"))
             .toolbar {
@@ -47,6 +48,7 @@ struct ProductListView: View {
 
     private var listContent: some View {
         List {
+            // Segmented control
             Picker(String(localized: "View"), selection: $viewModel.listMode) {
                 ForEach(ListMode.allCases, id: \.self) { mode in
                     Text(mode.displayName)
@@ -54,8 +56,8 @@ struct ProductListView: View {
             }
             .pickerStyle(.segmented)
             .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets())
-            .padding(.bottom, 4)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 16, trailing: 16))
 
             switch viewModel.listMode {
             case .byProduct:
@@ -69,6 +71,9 @@ struct ProductListView: View {
                 )
             }
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(ThuleTheme.background)
     }
 
     private var byProductSection: some View {
@@ -76,6 +81,9 @@ struct ProductListView: View {
             NavigationLink(value: product.id) {
                 ProductRowView(product: product)
             }
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(role: .destructive) {
                     viewModel.delete(product, in: modelContext)

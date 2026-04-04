@@ -6,56 +6,20 @@ struct ProductDetailView: View {
     @State private var showingEditForm = false
 
     var body: some View {
-        List {
-            Section {
-                VStack(spacing: 12) {
-                    ProductTypeIcon(productType: product.productType, size: 24)
-                        .padding(.bottom, 4)
-
-                    KeyCodeBadge(code: product.keyCode, style: .hero)
-
-                    Text(product.displayName)
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
+        ScrollView {
+            VStack(spacing: ThuleTheme.sectionSpacing) {
+                heroSection
+                productInfoSection
+                if let notes = product.notes, !notes.isEmpty {
+                    notesSection(notes)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 24)
+                datesSection
             }
-
-            Section {
-                Label {
-                    Text(product.productType.displayName)
-                } icon: {
-                    Image(systemName: product.productType.sfSymbol)
-                        .foregroundStyle(.thuleBlue)
-                }
-                if let custom = product.customProductName, product.productType == .other {
-                    LabeledContent(String(localized: "Custom Name"), value: custom)
-                }
-                if let nickname = product.nickname {
-                    LabeledContent(String(localized: "Nickname"), value: nickname)
-                }
-                LabeledContent(String(localized: "Number of Locks"), value: "\(product.numberOfLocks)")
-            } header: {
-                Text("Product Info")
-            }
-
-            if let notes = product.notes, !notes.isEmpty {
-                Section {
-                    Text(notes)
-                        .foregroundStyle(.secondary)
-                } header: {
-                    Text("Notes")
-                }
-            }
-
-            Section {
-                LabeledContent(String(localized: "Added"), value: product.createdAt.formatted(date: .abbreviated, time: .omitted))
-                LabeledContent(String(localized: "Updated"), value: product.updatedAt.formatted(date: .abbreviated, time: .omitted))
-            } header: {
-                Text("Dates")
-            }
+            .padding(.horizontal, ThuleTheme.horizontalPadding)
+            .padding(.top, 8)
+            .padding(.bottom, 32)
         }
+        .background(ThuleTheme.background)
         .navigationTitle(product.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -68,6 +32,91 @@ struct ProductDetailView: View {
             ProductFormView(editing: product)
         }
         .tint(.thuleBlue)
+    }
+
+    private var heroSection: some View {
+        VStack(spacing: 12) {
+            Image(systemName: product.productType.sfSymbol)
+                .font(.system(size: 32))
+                .foregroundStyle(.thuleBlue)
+                .padding(.bottom, 4)
+
+            KeyCodeBadge(code: product.keyCode, style: .hero)
+
+            Text(product.displayName)
+                .font(.title3.weight(.medium))
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 32)
+    }
+
+    private var productInfoSection: some View {
+        ThuleSection("Product Info") {
+            ThuleRow {
+                HStack(spacing: 12) {
+                    Image(systemName: product.productType.sfSymbol)
+                        .font(.system(size: 16))
+                        .foregroundStyle(.thuleBlue)
+                        .frame(width: 28, height: 28)
+                        .background(.thuleBlue.opacity(0.15), in: Circle())
+                    Text(product.productType.displayName)
+                        .fontWeight(.medium)
+                }
+            }
+            if let nickname = product.nickname {
+                ThuleRow {
+                    HStack {
+                        Text(String(localized: "Nickname"))
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(nickname)
+                            .fontWeight(.medium)
+                    }
+                }
+            }
+            ThuleRow(showDivider: false) {
+                HStack {
+                    Text(String(localized: "Number of Locks"))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text("\(product.numberOfLocks)")
+                        .fontWeight(.medium)
+                }
+            }
+        }
+    }
+
+    private func notesSection(_ notes: String) -> some View {
+        ThuleSection("Notes") {
+            ThuleRow(showDivider: false) {
+                Text(notes)
+                    .foregroundStyle(.primary)
+            }
+        }
+    }
+
+    private var datesSection: some View {
+        ThuleSection("Timeline") {
+            ThuleRow {
+                HStack {
+                    Text(String(localized: "Added"))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(product.createdAt.formatted(date: .abbreviated, time: .omitted))
+                        .fontWeight(.medium)
+                }
+            }
+            ThuleRow(showDivider: false) {
+                HStack {
+                    Text(String(localized: "Updated"))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(product.updatedAt.formatted(date: .abbreviated, time: .omitted))
+                        .fontWeight(.medium)
+                }
+            }
+        }
     }
 }
 

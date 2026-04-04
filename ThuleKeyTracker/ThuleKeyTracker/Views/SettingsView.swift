@@ -12,42 +12,18 @@ struct SettingsView: View {
     @State private var showingImportError = false
 
     var body: some View {
-        Form {
-            Section {
-                LabeledContent(String(localized: "Products"), value: "\(products.count)")
-                let uniqueKeys = Set(products.map(\.keyCode)).count
-                LabeledContent(String(localized: "Unique Keys"), value: "\(uniqueKeys)")
-            } header: {
-                Text("Summary")
+        ScrollView {
+            VStack(spacing: ThuleTheme.sectionSpacing) {
+                summarySection
+                backupSection
+                resetSection
+                aboutSection
             }
-
-            Section {
-                Button(String(localized: "Export Data")) {
-                    showingExporter = true
-                }
-                Button(String(localized: "Import Data")) {
-                    showingImporter = true
-                }
-            } header: {
-                Text("Backup")
-            }
-
-            Section {
-                Button(String(localized: "Delete All Data"), role: .destructive) {
-                    showingResetConfirmation = true
-                }
-            } header: {
-                Text("Reset")
-            }
-
-            Section {
-                LabeledContent(String(localized: "Version"), value: appVersion)
-            } header: {
-                Text("About")
-            } footer: {
-                Text("Thule key codes follow the pattern N001\u{2013}N250. This app is not affiliated with Thule Group.")
-            }
+            .padding(.horizontal, ThuleTheme.horizontalPadding)
+            .padding(.top, 8)
+            .padding(.bottom, 32)
         }
+        .background(ThuleTheme.background)
         .navigationTitle(String(localized: "Settings"))
         .tint(.thuleBlue)
         .confirmationDialog(
@@ -80,6 +56,88 @@ struct SettingsView: View {
             Button(String(localized: "OK")) {}
         } message: {
             Text(importError ?? "")
+        }
+    }
+
+    private var summarySection: some View {
+        ThuleSection("Summary") {
+            ThuleRow {
+                HStack {
+                    Text(String(localized: "Products"))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text("\(products.count)")
+                        .fontWeight(.medium)
+                }
+            }
+            ThuleRow(showDivider: false) {
+                HStack {
+                    let uniqueKeys = Set(products.map(\.keyCode)).count
+                    Text(String(localized: "Unique Keys"))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text("\(uniqueKeys)")
+                        .fontWeight(.medium)
+                }
+            }
+        }
+    }
+
+    private var backupSection: some View {
+        ThuleSection("Backup") {
+            ThuleRow {
+                Button {
+                    showingExporter = true
+                } label: {
+                    HStack {
+                        Text(String(localized: "Export Data"))
+                        Spacer()
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            ThuleRow(showDivider: false) {
+                Button {
+                    showingImporter = true
+                } label: {
+                    HStack {
+                        Text(String(localized: "Import Data"))
+                        Spacer()
+                        Image(systemName: "square.and.arrow.down")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+        }
+    }
+
+    private var resetSection: some View {
+        ThuleSection("Reset") {
+            ThuleRow(showDivider: false) {
+                Button(role: .destructive) {
+                    showingResetConfirmation = true
+                } label: {
+                    Text(String(localized: "Delete All Data"))
+                }
+            }
+        }
+    }
+
+    private var aboutSection: some View {
+        ThuleSection(
+            "About",
+            footer: "Thule key codes follow the pattern N001\u{2013}N250. This app is not affiliated with Thule Group."
+        ) {
+            ThuleRow(showDivider: false) {
+                HStack {
+                    Text(String(localized: "Version"))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(appVersion)
+                        .fontWeight(.medium)
+                }
+            }
         }
     }
 

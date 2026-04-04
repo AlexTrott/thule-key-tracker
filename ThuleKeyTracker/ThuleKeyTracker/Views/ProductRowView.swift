@@ -10,10 +10,10 @@ struct ProductRowView: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(product.displayName)
-                    .font(.body.weight(.semibold))
+                    .font(.system(size: 17, weight: .semibold))
                 if product.nickname != nil {
                     Text(product.productType.displayName)
-                        .font(.caption)
+                        .font(.system(size: 14))
                         .foregroundStyle(.secondary)
                 }
             }
@@ -22,15 +22,19 @@ struct ProductRowView: View {
 
             KeyCodeBadge(code: product.keyCode, style: .row)
         }
-        .padding(.vertical, 6)
+        .padding(ThuleTheme.cardPadding)
+        .background(ThuleTheme.card, in: RoundedRectangle(cornerRadius: ThuleTheme.cardRadius))
     }
 }
 
 #Preview {
-    List {
+    VStack(spacing: ThuleTheme.cardSpacing) {
         ForEach(PreviewSampleData.sampleProducts) { product in
             ProductRowView(product: product)
         }
     }
+    .padding(.horizontal, ThuleTheme.horizontalPadding)
+    .frame(maxWidth: .infinity)
+    .background(ThuleTheme.background)
     .modelContainer(PreviewSampleData.container)
 }

@@ -13,10 +13,11 @@ struct KeyGroupedListView: View {
                 ForEach(group.products) { product in
                     NavigationLink(value: product.id) {
                         HStack(spacing: 12) {
-                            ProductTypeIcon(productType: product.productType, size: 14)
+                            ProductTypeIcon(productType: product.productType, size: 32)
                             Text(product.displayName)
                                 .font(.body.weight(.medium))
                         }
+                        .padding(.vertical, 4)
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         if let onDelete {
@@ -42,7 +43,7 @@ struct KeyGroupedListView: View {
                 }
             } header: {
                 KeyCodeBadge(code: group.keyCode, style: .groupHeader)
-                    .padding(.vertical, 2)
+                    .padding(.top, 8)
             }
         }
     }
@@ -57,6 +58,7 @@ struct KeyGroupedListView: View {
         List {
             KeyGroupedListView(groups: groups)
         }
+        .listStyle(.plain)
     }
     .modelContainer(PreviewSampleData.container)
 }
