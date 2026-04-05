@@ -129,13 +129,25 @@ struct SettingsView: View {
             "About",
             footer: "Thule key codes follow the pattern N001\u{2013}N250. This app is not affiliated with Thule Group."
         ) {
-            ThuleRow(showDivider: false) {
+            ThuleRow {
                 HStack {
                     Text(String(localized: "Version"))
                         .foregroundStyle(.secondary)
                     Spacer()
                     Text(appVersion)
                         .fontWeight(.medium)
+                }
+            }
+            ThuleRow(showDivider: false) {
+                NavigationLink {
+                    PrivacyPolicyView()
+                } label: {
+                    HStack {
+                        Text(String(localized: "Privacy Policy"))
+                        Spacer()
+                        Image(systemName: "hand.raised.fill")
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }
