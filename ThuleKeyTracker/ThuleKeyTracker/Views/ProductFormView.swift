@@ -7,6 +7,7 @@ struct ProductFormView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel: ProductFormViewModel
     @FocusState private var keyCodeFocused: Bool
+    @State private var showingProductTypePicker = false
 
     init(editing product: ThuleProduct? = nil) {
         _viewModel = State(initialValue: product.map {
@@ -146,23 +147,19 @@ struct ProductFormView: View {
     private var productSection: some View {
         ThuleSection("PRODUCT") {
             ThuleRow(showDivider: viewModel.showCustomProductName) {
-                HStack {
+                Button {
+                    showingProductTypePicker = true
+                } label: {
                     HStack(spacing: 12) {
-                        ProductTypeIcon(productType: viewModel.productType, size: 32)
-                        Text(String(localized: "Type"))
+                        ProductTypeIcon(productType: viewModel.productType, size: 40)
+                        Text(viewModel.productType.displayName)
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .fontWeight(.semibold)
                             .foregroundStyle(.secondary)
                     }
-                    Spacer()
-                    Picker(selection: $viewModel.productType) {
-                        ForEach(ProductType.allCases) { type in
-                            Label(type.displayName, systemImage: type.sfSymbol)
-                                .tag(type)
-                        }
-                    } label: {
-                        EmptyView()
-                    }
-                    .labelsHidden()
-                    .tint(.primary)
                 }
             }
             if viewModel.showCustomProductName {
@@ -170,6 +167,9 @@ struct ProductFormView: View {
                     TextField(String(localized: "Product name"), text: $viewModel.customProductName)
                 }
             }
+        }
+        .sheet(isPresented: $showingProductTypePicker) {
+            ProductTypePickerView(selectedType: $viewModel.productType)
         }
     }
 

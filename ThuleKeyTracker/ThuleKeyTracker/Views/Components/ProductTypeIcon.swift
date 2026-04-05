@@ -5,7 +5,7 @@ struct ProductTypeIcon: View {
     var size: CGFloat = 44
 
     var body: some View {
-        Image(productType.iconAsset)
+        productType.iconImage
             .renderingMode(.template)
             .resizable()
             .scaledToFit()

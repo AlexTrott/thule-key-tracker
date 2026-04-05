@@ -57,6 +57,16 @@ enum ProductType: String, Codable, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// The icon image to use — SF Symbol "bicycle" for bike rack types, custom asset for everything else
+    var iconImage: Image {
+        switch self {
+        case .bikeRackTowbar, .bikeRackRoof, .bikeRackTailgate:
+            Image(systemName: "bicycle")
+        default:
+            Image(iconAsset)
+        }
+    }
+
     /// SF Symbol fallback for system contexts (e.g. menus, pickers)
     var sfSymbol: String {
         switch self {
