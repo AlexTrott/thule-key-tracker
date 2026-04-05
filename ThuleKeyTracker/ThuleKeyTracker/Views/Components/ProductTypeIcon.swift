@@ -5,11 +5,15 @@ struct ProductTypeIcon: View {
     var size: CGFloat = 44
 
     var body: some View {
-        Image(systemName: productType.sfSymbol)
-            .font(.system(size: size * 0.42, weight: .semibold))
+        Image(productType.iconAsset)
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .padding(size * 0.22)
             .foregroundStyle(.white)
             .frame(width: size, height: size)
             .background(.thuleBlue, in: Circle())
+            .shadow(color: .thuleBlue.opacity(0.3), radius: 6, y: 2)
     }
 }
 
@@ -23,4 +27,5 @@ struct ProductTypeIcon: View {
         }
     }
     .padding()
+    .preferredColorScheme(.dark)
 }

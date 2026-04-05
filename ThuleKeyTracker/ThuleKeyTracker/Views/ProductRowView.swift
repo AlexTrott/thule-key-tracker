@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ProductRowView: View {
     let product: ThuleProduct
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         HStack(spacing: 14) {
@@ -11,11 +12,10 @@ struct ProductRowView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(product.displayName)
                     .font(.system(size: 17, weight: .semibold))
-                if product.nickname != nil {
-                    Text(product.productType.displayName)
-                        .font(.system(size: 14))
-                        .foregroundStyle(.secondary)
-                }
+                Text(product.productType.displayName.uppercased())
+                    .font(ThuleTheme.labelFont(size: 12))
+                    .tracking(0.5)
+                    .foregroundStyle(.secondary)
             }
 
             Spacer()
@@ -23,7 +23,27 @@ struct ProductRowView: View {
             KeyCodeBadge(code: product.keyCode, style: .row)
         }
         .padding(ThuleTheme.cardPadding)
-        .background(ThuleTheme.card, in: RoundedRectangle(cornerRadius: ThuleTheme.cardRadius))
+        .background {
+            RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
+                .fill(ThuleTheme.card)
+                .overlay(
+                    RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: colorScheme == .dark
+                                    ? [.white.opacity(0.08), .white.opacity(0.02)]
+                                    : [.black.opacity(0.06), .black.opacity(0.02)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ),
+                            lineWidth: 0.5
+                        )
+                )
+                .shadow(
+                    color: colorScheme == .dark ? .clear : .black.opacity(0.06),
+                    radius: 8, y: 2
+                )
+        }
     }
 }
 

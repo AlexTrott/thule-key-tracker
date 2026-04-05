@@ -3,15 +3,15 @@ import SwiftData
 
 @Model
 final class ThuleProduct {
-    var id: UUID
-    var productType: ProductType
+    var id: UUID = UUID()
+    var productType: ProductType = ProductType.other
     var customProductName: String?
-    var keyCode: String
+    var keyCode: String = ""
     var nickname: String?
     var notes: String?
-    var numberOfLocks: Int
-    var createdAt: Date
-    var updatedAt: Date
+    var numberOfLocks: Int = 1
+    var createdAt: Date = Date.now
+    var updatedAt: Date = Date.now
 
     init(
         id: UUID = UUID(),

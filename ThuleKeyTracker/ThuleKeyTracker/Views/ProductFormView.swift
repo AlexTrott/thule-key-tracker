@@ -4,7 +4,9 @@ import SwiftUI
 struct ProductFormView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel: ProductFormViewModel
+    @FocusState private var keyCodeFocused: Bool
 
     init(editing product: ThuleProduct? = nil) {
         _viewModel = State(initialValue: product.map {
@@ -17,14 +19,13 @@ struct ProductFormView: View {
             ScrollView {
                 VStack(spacing: ThuleTheme.sectionSpacing) {
                     keyCodeHero
-                    keyCodeInput
                     productSection
                     detailsSection
                 }
                 .padding(.horizontal, ThuleTheme.horizontalPadding)
                 .padding(.bottom, 32)
             }
-            .background(ThuleTheme.background)
+            .background(Color(.systemGroupedBackground))
             .navigationTitle(viewModel.isEditing
                 ? String(localized: "Edit Product")
                 : String(localized: "Add Product"))
@@ -43,25 +44,52 @@ struct ProductFormView: View {
                 }
             }
             .tint(.thuleBlue)
+            .onAppear {
+                if !viewModel.isEditing {
+                    keyCodeFocused = true
+                }
+            }
         }
     }
 
     private var keyCodeHero: some View {
-        VStack(spacing: 12) {
-            Text(String(localized: "Live Preview").uppercased())
-                .font(.caption2.weight(.semibold))
+        VStack(spacing: 16) {
+            Text("KEY CODE")
+                .font(ThuleTheme.labelFont(size: 11))
                 .tracking(1.5)
                 .foregroundStyle(.secondary)
 
-            KeyCodeBadge(code: viewModel.formattedKeyCode, style: .formPreview)
-                .opacity(viewModel.canSave ? 1 : 0.3)
+            // Big editable key code: fixed "N" prefix + digit input
+            ZStack {
+                // Invisible sizer — always reserves space for "N000"
+                Text("N000")
+                    .font(ThuleTheme.keyCodeFont(size: 56))
+                    .tracking(-2)
+                    .hidden()
+
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
+                    Text("N")
+                        .font(ThuleTheme.keyCodeFont(size: 56))
+                        .tracking(-2)
+                        .foregroundStyle(viewModel.keyCodeInput.isEmpty ? .tertiary : .primary)
+
+                    TextField("___", text: $viewModel.keyCodeInput)
+                        .font(ThuleTheme.keyCodeFont(size: 56))
+                        .tracking(-2)
+                        .keyboardType(.numberPad)
+                        .focused($keyCodeFocused)
+                        .textFieldStyle(.plain)
+                        .fixedSize()
+                }
+            }
+            .frame(height: 68)
 
             if viewModel.canSave {
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.caption2)
                         .foregroundStyle(.thuleBlue)
-                    Text(String(localized: "Valid Format").uppercased())
+                    Text("VALID FORMAT")
                         .font(.system(size: 10, weight: .bold))
                         .tracking(1)
                         .foregroundStyle(.thuleBlue)
@@ -69,31 +97,6 @@ struct ProductFormView: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .background(.thuleBlue.opacity(0.12), in: Capsule())
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
-        .padding(.horizontal, ThuleTheme.cardPadding)
-        .background {
-            RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
-                .fill(ThuleTheme.card)
-                .overlay {
-                    RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
-                        .strokeBorder(ThuleTheme.separator.opacity(0.5), lineWidth: 0.5)
-                }
-        }
-    }
-
-    private var keyCodeInput: some View {
-        ThuleSection("Key Code", footer: "The code is usually engraved on the key or lock face.") {
-            ThuleRow(showDivider: false) {
-                HStack {
-                    Image(systemName: "key.fill")
-                        .foregroundStyle(.secondary)
-                    TextField(String(localized: "e.g. 125 or N125"), text: $viewModel.keyCodeInput)
-                        .keyboardType(.numberPad)
-                        .font(.body.monospaced())
-                }
             }
 
             if viewModel.showRangeWarning {
@@ -104,25 +107,62 @@ struct ProductFormView: View {
                         .font(.caption)
                 }
                 .foregroundStyle(.orange)
-                .padding(.horizontal, ThuleTheme.cardPadding)
-                .padding(.bottom, 12)
             }
+
+            Text("The code is usually engraved on the key or lock face.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
+        .padding(.horizontal, ThuleTheme.cardPadding)
+        .background {
+            RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
+                .fill(Color(.secondarySystemGroupedBackground))
+                .overlay {
+                    RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: colorScheme == .dark
+                                    ? [.white.opacity(0.08), .white.opacity(0.02)]
+                                    : [.black.opacity(0.04), .black.opacity(0.01)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ),
+                            lineWidth: 0.5
+                        )
+                }
+                .shadow(
+                    color: colorScheme == .dark ? .clear : .black.opacity(0.04),
+                    radius: 8, y: 2
+                )
+        }
+        .onTapGesture {
+            keyCodeFocused = true
         }
     }
 
     private var productSection: some View {
-        ThuleSection("Product") {
-            ThuleRow(showDivider: false) {
-                Picker(selection: $viewModel.productType) {
-                    ForEach(ProductType.allCases) { type in
-                        Label(type.displayName, systemImage: type.sfSymbol)
-                            .tag(type)
-                    }
-                } label: {
+        ThuleSection("PRODUCT") {
+            ThuleRow(showDivider: viewModel.showCustomProductName) {
+                HStack {
                     HStack(spacing: 12) {
                         ProductTypeIcon(productType: viewModel.productType, size: 32)
-                        Text(String(localized: "Product Type"))
+                        Text(String(localized: "Type"))
+                            .foregroundStyle(.secondary)
                     }
+                    Spacer()
+                    Picker(selection: $viewModel.productType) {
+                        ForEach(ProductType.allCases) { type in
+                            Label(type.displayName, systemImage: type.sfSymbol)
+                                .tag(type)
+                        }
+                    } label: {
+                        EmptyView()
+                    }
+                    .labelsHidden()
+                    .tint(.primary)
                 }
             }
             if viewModel.showCustomProductName {
@@ -134,7 +174,7 @@ struct ProductFormView: View {
     }
 
     private var detailsSection: some View {
-        ThuleSection("Details") {
+        ThuleSection("DETAILS") {
             ThuleRow {
                 HStack {
                     Text(String(localized: "Nickname"))

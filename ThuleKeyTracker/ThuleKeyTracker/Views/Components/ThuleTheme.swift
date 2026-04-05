@@ -1,19 +1,39 @@
 import SwiftUI
 
 enum ThuleTheme {
-    // MARK: - Colors (uses iOS semantic colors that match Stitch design exactly)
+    // MARK: - Colors (adaptive light/dark)
 
-    /// Pure black in dark, system grouped background in light
-    static let background = Color(.systemGroupedBackground)
+    /// #F9F9F9 in light, #000000 in dark
+    static let background = Color(.systemBackground)
 
-    /// #1C1C1E in dark, white in light — for cards and surfaces
+    /// White in light, #1C1C1E in dark — card surfaces
     static let card = Color(.secondarySystemGroupedBackground)
 
-    /// #3A3A3C in dark, light gray in light — for dividers inside cards
+    /// Dividers
     static let separator = Color(.separator)
 
-    /// #8E8E93 — secondary text
+    /// Secondary text
     static let secondaryText = Color(.secondaryLabel)
+
+    /// Segmented control track — light gray in light, dark gray in dark
+    static let segmentedTrack = Color(.systemFill)
+
+    // MARK: - Typography
+
+    /// Condensed bold title font — Thule brand feel
+    static func titleFont(size: CGFloat) -> Font {
+        .system(size: size, weight: .black, design: .default).width(.condensed)
+    }
+
+    /// Monospaced bold for key codes
+    static func keyCodeFont(size: CGFloat) -> Font {
+        .system(size: size, weight: .bold, design: .monospaced)
+    }
+
+    /// Label font — uppercase tracking style
+    static func labelFont(size: CGFloat) -> Font {
+        .system(size: size, weight: .semibold)
+    }
 
     // MARK: - Spacing
 

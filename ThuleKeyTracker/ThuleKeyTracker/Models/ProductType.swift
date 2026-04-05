@@ -8,8 +8,11 @@ enum ProductType: String, Codable, CaseIterable, Identifiable, Sendable {
     case roofBars
     case skiCarrier
     case kayakCarrier
+    case boardCarrier
     case cargoCarrier
     case cargoBag
+    case cableLock
+    case lockCylinder
     case trailerLock
     case other
 
@@ -22,15 +25,39 @@ enum ProductType: String, Codable, CaseIterable, Identifiable, Sendable {
         case .bikeRackRoof: String(localized: "Bike Rack (Roof)")
         case .bikeRackTailgate: String(localized: "Bike Rack (Tailgate)")
         case .roofBars: String(localized: "Roof Bars")
-        case .skiCarrier: String(localized: "Ski Carrier")
-        case .kayakCarrier: String(localized: "Kayak Carrier")
+        case .skiCarrier: String(localized: "Ski/Snowboard Carrier")
+        case .kayakCarrier: String(localized: "Kayak/Canoe Carrier")
+        case .boardCarrier: String(localized: "Board Carrier")
         case .cargoCarrier: String(localized: "Cargo Carrier")
         case .cargoBag: String(localized: "Cargo Bag")
+        case .cableLock: String(localized: "Cable Lock")
+        case .lockCylinder: String(localized: "Lock Cylinder")
         case .trailerLock: String(localized: "Trailer Lock")
         case .other: String(localized: "Other")
         }
     }
 
+    /// Custom bespoke icon asset name (Recraft-generated pictograms)
+    var iconAsset: String {
+        switch self {
+        case .roofBox: "roofBoxIcon"
+        case .bikeRackTowbar: "bikeRackTowbarIcon"
+        case .bikeRackRoof: "bikeRackRoofIcon"
+        case .bikeRackTailgate: "bikeRackTailgateIcon"
+        case .roofBars: "roofBarsIcon"
+        case .skiCarrier: "skiCarrierIcon"
+        case .kayakCarrier: "kayakCarrierIcon"
+        case .boardCarrier: "boardCarrierIcon"
+        case .cargoCarrier: "cargoCarrierIcon"
+        case .cargoBag: "cargoBagIcon"
+        case .cableLock: "cableLockIcon"
+        case .lockCylinder: "lockCylinderIcon"
+        case .trailerLock: "trailerLockIcon"
+        case .other: "otherIcon"
+        }
+    }
+
+    /// SF Symbol fallback for system contexts (e.g. menus, pickers)
     var sfSymbol: String {
         switch self {
         case .roofBox: "shippingbox.fill"
@@ -40,8 +67,11 @@ enum ProductType: String, Codable, CaseIterable, Identifiable, Sendable {
         case .roofBars: "rectangle.split.1x2"
         case .skiCarrier: "snowflake"
         case .kayakCarrier: "figure.rowing"
+        case .boardCarrier: "figure.surfing"
         case .cargoCarrier: "cart.fill"
         case .cargoBag: "bag.fill"
+        case .cableLock: "cable.connector"
+        case .lockCylinder: "lock.circle"
         case .trailerLock: "lock.fill"
         case .other: "wrench.and.screwdriver.fill"
         }

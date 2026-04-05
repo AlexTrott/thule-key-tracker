@@ -3,8 +3,10 @@ import SwiftUI
 
 struct ProductListView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) private var colorScheme
     @Query(sort: \ThuleProduct.createdAt, order: .reverse) private var products: [ThuleProduct]
     @State private var viewModel = ProductListViewModel()
+    @Namespace private var segmentAnimation
 
     var body: some View {
         NavigationStack {
@@ -16,9 +18,12 @@ struct ProductListView: View {
                 }
             }
             .background(ThuleTheme.background)
-            .navigationTitle(String(localized: "Thule Keys"))
-            .searchable(text: $viewModel.searchText, prompt: String(localized: "Search by key code, name, or type"))
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("THULE KEYS")
+                        .font(ThuleTheme.titleFont(size: 18))
+                        .tracking(1.5)
+                }
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink {
                         SettingsView()
@@ -34,6 +39,8 @@ struct ProductListView: View {
                     }
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $viewModel.searchText, prompt: String(localized: "Search by key code, name, or type"))
             .sheet(isPresented: $viewModel.showingAddForm) {
                 ProductFormView()
             }
@@ -48,16 +55,10 @@ struct ProductListView: View {
 
     private var listContent: some View {
         List {
-            // Segmented control
-            Picker(String(localized: "View"), selection: $viewModel.listMode) {
-                ForEach(ListMode.allCases, id: \.self) { mode in
-                    Text(mode.displayName)
-                }
-            }
-            .pickerStyle(.segmented)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 16, trailing: 16))
+            segmentedControl
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
 
             switch viewModel.listMode {
             case .byProduct:
@@ -76,9 +77,42 @@ struct ProductListView: View {
         .background(ThuleTheme.background)
     }
 
+    private var segmentedControl: some View {
+        HStack(spacing: 0) {
+            ForEach(ListMode.allCases, id: \.self) { mode in
+                Button {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                        viewModel.listMode = mode
+                    }
+                } label: {
+                    Text(mode.displayName)
+                        .font(ThuleTheme.labelFont(size: 14))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background {
+                            if viewModel.listMode == mode {
+                                Capsule()
+                                    .fill(.thuleBlue)
+                                    .matchedGeometryEffect(id: "activeSegment", in: segmentAnimation)
+                            }
+                        }
+                        .foregroundStyle(viewModel.listMode == mode ? .white : .secondary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(4)
+        .background(
+            Capsule()
+                .fill(ThuleTheme.segmentedTrack)
+        )
+    }
+
     private var byProductSection: some View {
         ForEach(viewModel.filteredProducts(from: products)) { product in
-            NavigationLink(value: product.id) {
+            ZStack {
+                NavigationLink(value: product.id) { EmptyView() }
+                    .opacity(0)
                 ProductRowView(product: product)
             }
             .listRowBackground(Color.clear)

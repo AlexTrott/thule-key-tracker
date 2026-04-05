@@ -6,19 +6,59 @@ struct KeyGroupedListView: View {
     var onDelete: ((ThuleProduct) -> Void)?
     var onDuplicate: ((ThuleProduct) -> Void)?
     var shareText: ((ThuleProduct) -> String)?
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         ForEach(groups) { group in
             Section {
                 ForEach(group.products) { product in
-                    NavigationLink(value: product.id) {
-                        HStack(spacing: 12) {
-                            ProductTypeIcon(productType: product.productType, size: 32)
-                            Text(product.displayName)
-                                .font(.body.weight(.medium))
+                    ZStack {
+                        NavigationLink(value: product.id) { EmptyView() }
+                            .opacity(0)
+                        HStack(spacing: 14) {
+                            ProductTypeIcon(productType: product.productType)
+
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(product.displayName)
+                                    .font(.system(size: 17, weight: .semibold))
+                                Text(product.productType.displayName.uppercased())
+                                    .font(ThuleTheme.labelFont(size: 12))
+                                    .tracking(0.5)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(Color(.tertiaryLabel))
                         }
-                        .padding(.vertical, 4)
+                        .padding(ThuleTheme.cardPadding)
+                        .background {
+                            RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
+                                .fill(ThuleTheme.card)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: ThuleTheme.cardRadius)
+                                        .strokeBorder(
+                                            LinearGradient(
+                                                colors: colorScheme == .dark
+                                                    ? [.white.opacity(0.08), .white.opacity(0.02)]
+                                                    : [.black.opacity(0.06), .black.opacity(0.02)],
+                                                startPoint: .top,
+                                                endPoint: .bottom
+                                            ),
+                                            lineWidth: 0.5
+                                        )
+                                )
+                                .shadow(
+                                    color: colorScheme == .dark ? .clear : .black.opacity(0.06),
+                                    radius: 8, y: 2
+                                )
+                        }
                     }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         if let onDelete {
                             Button(role: .destructive) {
@@ -42,8 +82,19 @@ struct KeyGroupedListView: View {
                     }
                 }
             } header: {
-                KeyCodeBadge(code: group.keyCode, style: .groupHeader)
-                    .padding(.top, 8)
+                HStack(alignment: .firstTextBaseline) {
+                    KeyCodeBadge(code: group.keyCode, style: .groupHeader)
+
+                    Spacer()
+
+                    Text("\(group.products.count) \(group.products.count == 1 ? "PRODUCT" : "PRODUCTS")")
+                        .font(ThuleTheme.labelFont(size: 12))
+                        .tracking(0.8)
+                        .foregroundStyle(.thuleBlue)
+                }
+                .padding(.top, 12)
+                .padding(.bottom, 4)
+                .textCase(nil)
             }
         }
     }
@@ -59,6 +110,8 @@ struct KeyGroupedListView: View {
             KeyGroupedListView(groups: groups)
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(ThuleTheme.background)
     }
     .modelContainer(PreviewSampleData.container)
 }

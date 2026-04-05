@@ -112,7 +112,7 @@ struct ProductFormViewModelTests {
 
         #expect(vm.isEditing)
         #expect(vm.productType == .skiCarrier)
-        #expect(vm.keyCodeInput == "N042")
+        #expect(vm.keyCodeInput == "042")
         #expect(vm.nickname == "Ski Rack")
         #expect(vm.notes == "On the Volvo")
         #expect(vm.numberOfLocks == 2)
@@ -130,7 +130,7 @@ struct ProductFormViewModelTests {
 
         let vm = ProductFormViewModel(editing: product)
         vm.nickname = "New Name"
-        vm.keyCodeInput = "N200"
+        vm.keyCodeInput = "200"
         vm.save(in: context)
 
         #expect(product.nickname == "New Name")

@@ -36,15 +36,13 @@ struct ProductDetailView: View {
 
     private var heroSection: some View {
         VStack(spacing: 12) {
-            Image(systemName: product.productType.sfSymbol)
-                .font(.system(size: 32))
-                .foregroundStyle(.thuleBlue)
-                .padding(.bottom, 4)
+            ProductTypeIcon(productType: product.productType, size: 56)
 
             KeyCodeBadge(code: product.keyCode, style: .hero)
 
-            Text(product.displayName)
-                .font(.title3.weight(.medium))
+            Text(product.productType.displayName.uppercased())
+                .font(ThuleTheme.labelFont(size: 13))
+                .tracking(1.0)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
@@ -52,7 +50,7 @@ struct ProductDetailView: View {
     }
 
     private var productInfoSection: some View {
-        ThuleSection("Product Info") {
+        ThuleSection("PRODUCT INFO") {
             ThuleRow {
                 HStack(spacing: 12) {
                     Image(systemName: product.productType.sfSymbol)
@@ -88,7 +86,7 @@ struct ProductDetailView: View {
     }
 
     private func notesSection(_ notes: String) -> some View {
-        ThuleSection("Notes") {
+        ThuleSection("NOTES") {
             ThuleRow(showDivider: false) {
                 Text(notes)
                     .foregroundStyle(.primary)
@@ -97,7 +95,7 @@ struct ProductDetailView: View {
     }
 
     private var datesSection: some View {
-        ThuleSection("Timeline") {
+        ThuleSection("TIMELINE") {
             ThuleRow {
                 HStack {
                     Text(String(localized: "Added"))

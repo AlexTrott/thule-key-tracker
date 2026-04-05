@@ -15,24 +15,25 @@ struct KeyCodeBadge: View {
         switch style {
         case .row:
             Text(code)
-                .font(.system(size: 28, weight: .bold, design: .monospaced))
+                .font(ThuleTheme.keyCodeFont(size: 28))
                 .tracking(-1)
-                .foregroundStyle(.primary)
+                .foregroundStyle(.thuleBlue)
 
         case .hero:
             Text(code)
-                .font(.system(size: 56, weight: .bold, design: .monospaced))
+                .font(ThuleTheme.keyCodeFont(size: 56))
                 .tracking(-2)
                 .foregroundStyle(.primary)
 
         case .groupHeader:
             Text(code)
-                .font(.system(size: 20, weight: .bold, design: .monospaced))
-                .foregroundStyle(.thuleBlue)
+                .font(ThuleTheme.keyCodeFont(size: 32))
+                .tracking(-1)
+                .foregroundStyle(.primary)
 
         case .formPreview:
             Text(code)
-                .font(.system(size: 56, weight: .bold, design: .monospaced))
+                .font(ThuleTheme.keyCodeFont(size: 56))
                 .tracking(-2)
                 .foregroundStyle(.primary)
         }

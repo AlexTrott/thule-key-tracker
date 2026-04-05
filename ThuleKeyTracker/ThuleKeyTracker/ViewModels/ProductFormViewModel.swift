@@ -37,7 +37,7 @@ final class ProductFormViewModel {
         self.editingProduct = product
         self.productType = product.productType
         self.customProductName = product.customProductName ?? ""
-        self.keyCodeInput = product.keyCode
+        self.keyCodeInput = product.keyCode.hasPrefix("N") ? String(product.keyCode.dropFirst()) : product.keyCode
         self.nickname = product.nickname ?? ""
         self.notes = product.notes ?? ""
         self.numberOfLocks = product.numberOfLocks
